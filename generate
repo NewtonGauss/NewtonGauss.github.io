@@ -1,0 +1,70 @@
+#!/bin/sh
+
+md_dir="md/"
+md_index="md/main.md"
+art_dir="articles/"
+html_index="index.html"
+site_title="Segmentation fault"
+fstyle="style.css"
+html_icon="components/short_icon.html"
+html_header="components/header.html"
+html_footer="components/footer.html"
+id_art_header="artículos"
+
+function generate_article_list() {
+	for i in $(ls -t -1 $art_dir/*); do
+		art_name="$(grep "<h1.*>.*</h1>" $i | head -1 | sed "s/<.*>\(.*\)<.*>/\\1/")"
+		sed "/<h1 id=\"$id_art_header\">/a\
+			<li><a href=\"$i\">$art_name</a></li>" -i $html_index
+	done
+	sed -e "/<h1 id=\"$id_art_header\">/a\
+		<ul>" \
+		-e "/<li><a href.*/s/\///" -i $html_index
+	awk 'FNR==NR{ if (/<li>.*<\/li>/) p=NR; next} 1; FNR==p{ print "</ul>" }'\
+		$html_index $html_index > temp
+	mv temp $html_index
+}
+
+function addentry() {
+	filename=$(basename -- "$1")
+	filename="${filename%.*}.html"
+	pandoc -s -o $art_dir$filename\
+		-c $fstyle \
+		-H $html_icon \
+		-B $html_header \
+		-A $html_footer \
+		--highlight-style=zenburn $1 && \
+		sed -e "s/<title>.*<\/title>/<title>$site_title<\/title>/" \
+			-e "s/<link rel=\"\(.*\)\".*href=\"\(.*\)\".*/<link rel=\"\1\" href=\"..\/\2\">/"\
+			-i $art_dir$filename
+	generate_article_list
+}
+
+# function regenerate() {
+# 
+# }
+
+function index() {
+	pandoc -s -o $html_index \
+		-c $fstyle \
+		-H $html_icon \
+		-B $html_header \
+		-A $html_footer \
+		--highlight-style=zenburn $md_index && \
+		sed -e "s/<title>.*<\/title>/<title>$site_title<\/title>/" -i $html_index
+	}
+
+case $1 in
+	"addentry" | "add" | "a")
+		index
+		addentry $2;;
+	"regenerate" | "r")
+		regenerate;;
+	"index" | "i")
+		index;;
+	*)
+		echo -e -n "Incorrect option\nTry with:\n"\
+			"	addentry | add | a	for adding a new entry to the blog\n"\
+			"	regenerate | r 		for regenerating the whole site\n"\
+			"	index | i 		for regenerating the index\n";;
+			esac
