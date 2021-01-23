@@ -36,6 +36,7 @@ function addentry() {
 		--highlight-style=zenburn $1 && \
 		sed -e "s/<title>.*<\/title>/<title>$site_title<\/title>/" \
 			-e "s/<link rel=\"\(.*\)\".*href=\"\(.*\)\".*/<link rel=\"\1\" href=\"..\/\2\">/"\
+			-e "s/<img class=\"logo\" src=\"\(.*\)\" /<img class=\"logo\" src=\"..\/\1\"/"\
 			-i $art_dir$filename
 	generate_article_list
 }
