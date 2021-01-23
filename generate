@@ -15,11 +15,11 @@ function generate_article_list() {
 	for i in $(ls -t -1 $art_dir/*.html); do
 		art_name="$(grep "<h1.*>.*</h1>" $i | head -1 | sed "s/<.*>\(.*\)<.*>/\\1/")"
 		sed "/<h1 id=\"$id_art_header\">/a\
-			<li><a href=\"$i\">$art_name</a></li>" -i $html_index
+			<li><a class="art-ls" href=\"$i\">$art_name</a></li>" -i $html_index
 	done
 	sed -e "/<h1 id=\"$id_art_header\">/a\
 		<ul>" \
-		-e "/<li><a href.*/s/\///" -i $html_index
+		-e "/<li><a class="art-ls" href.*/s/\///" -i $html_index
 	awk 'FNR==NR{ if (/<li>.*<\/li>/) p=NR; next} 1; FNR==p{ print "</ul>" }'\
 		$html_index $html_index > temp
 	mv temp $html_index
