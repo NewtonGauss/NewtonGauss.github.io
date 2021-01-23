@@ -57,7 +57,7 @@ p {
   margin: 1em 0;
 }
 
-img {
+img .logo {
   max-width: 100%;
   display: block;
   margin-left: auto;
