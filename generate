@@ -19,7 +19,7 @@ function generate_article_list() {
 	done
 	sed -e "/<h1 id=\"$id_art_header\">/a\
 		<ul>" \
-		-e "/<li><a class="art-ls" href.*/s/\///" -i $html_index
+		-e "/<li><a class=\"art-ls\" href.*/s/\///" -i $html_index
 	awk 'FNR==NR{ if (/<li>.*<\/li>/) p=NR; next} 1; FNR==p{ print "</ul>" }'\
 		$html_index $html_index > temp
 	mv temp $html_index
