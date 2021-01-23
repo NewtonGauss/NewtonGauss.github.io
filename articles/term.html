@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Segmentation fault</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="../style.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link rel="shortcut icon" href="../favicon.png" type="image/x-icon">
+</head>
+<body>
+<nav class="menu">
+	<div class="nav-left">
+		<ul>
+			<li><a href="index.html"><img class="logo" src="favicon.png" alt="">segmentation fault;</a></li>
+		</ul>
+	</div>
+	<div class="nav-right">
+		<ul>
+			<li><a href="mailto:germanmerkel9@gmail.com">contact</a></li>
+			<li><a href="https://github.com/NewtonGauss">github</a></li>
+		</ul>
+	</div>
+</nav>
+<article>
+<h1 id="terminal-linea-de-comando-tty-pty-shell-cómo-todo-en-unix-es-un-archivo">Terminal, Linea de comando, TTY, PTY, Shell: cómo todo en UNIX es un archivo</h1>
+<p>
+22 ene 2021
+</p>
+<h2 id="qué-es-una-terminal">¿Qué es una terminal?</h2>
+<p>Hace mucho, mucho tiempo, se utilizaban aparatos llamados teletipos, o <em>teletypes</em> en inglés (de aquí surge la sigla <em>tty</em>). Estos teletipos es lo que se conoce como terminal. Las terminales son un equipo electrónico con el cual se interactúa (o se interactuaba, hoy raramente se hace de la misma manera) con un sistema en tiempo compartido (como era usado UNIX en la época de los setenta y los ochenta). Estas terminales poseían un display (las más cancheras, la mayoría se trataba de una impresora, y cada salida del sistema se imprimía, esto es, se hacía un <code>print</code>) y un teclado para interactuar con el sistema, esto es, con la máquina “madre”. Estas terminales eran conectadas mediante un cable serial, y esta es una de las razones por lo cual en UNIX los comandos suelen ser cortos (<code>cd</code>, <code>sh</code>, <code>rm</code>, etcétera).</p>
+<figure>
+<img src="img/teltypes.jpg" height="200" alt="Teletipos de la época de los 1940’s" /><figcaption aria-hidden="true">Teletipos de la época de los 1940’s</figcaption>
+</figure>
+<p>Hoy día, en la época de computadoras con multiprocesadores y tarjetas de video, el concepto de terminal como una máquina separada se ha abandonado. Las terminales tenían mucho sentido en los sistemas de tiempo compartido, dado que proveer a cada empleado de la empresa con una computadora era algo que no podía hacerse por su alto costo. Con la llegada de las computadoras personales, los sistemas de tiempo compartido fueron cayendo a favor de utilizar distintas computadoras conectadas, en vez de un sistema centralizado. Sin embargo, el concepto de terminal se mantuvo.</p>
+<figure>
+<img src="img/vt100.jpg" height="200" alt="Terminal VT100" /><figcaption aria-hidden="true">Terminal VT100</figcaption>
+</figure>
+<p>No es casualidad que siga estando el concepto de terminal entre nosotros. UNIX, al tratar todo como archivos, pudo mantener su modelo viejo (apto para sistemas compartidos) y lograr adaptarlo a computadoras personales. Para lograr esto, el kernel de los sistemas UNIX proveen terminales virtuales, a las cuales se accede, generalmente, mediante una combinación de teclas (<code>CTRL+ALT+F1</code> para ir a la terminal virtual 1). Sin embargo, no importa que sean virtuales, los sistemas UNIX las tratan de la misma manera que a las terminales “reales”. Esto quiere decir, que si hoy día quisiéramos conectar una terminal como la VT100 en un sistema moderno, podríamos (como se puede ver con los HP thin clients, “computadoras” que son más bien terminales y aprovechan la computación basada en la nube). Si te encontrás entre las/os lectoras/es curiosos/as, ya te estarás preguntando si los emuladores de terminal están incluidos dentro del grupo de terminales virtuales, y te voy a dar una respuesta rápida, pero tenés que saber que después vamos a tocar ese tema: es complicado, definitivamente no son lo que se llama tty (que se verá también después), y siempre corren debajo de una terminal virtual; entonces, redondeando, semánticamente sí son terminales virtuales, pero para un sistema UNIX, no.</p>
+<figure>
+<img src="img/hp-thin-client.jpg" height="200" alt="HP Thin Client, una especie de modem al cual se le conecta un monitor y los periféricos" /><figcaption aria-hidden="true">HP Thin Client, una especie de modem al cual se le conecta un monitor y los periféricos</figcaption>
+</figure>
+<h2 id="qué-es-un-shell">¿Qué es un SHELL?</h2>
+<p>El shell o la shell, como cada uno/a quiera llamarlo/a, es la interfaz que permite conectar al usuario del sistema (o un programa que hace de usuario) con el kernel. Shell en inglés es el caparazón de la tortuga (o bueno, de otro animal que tenga caparazón), y por lo tanto, se trata de aquella porción de software que cubre al sistema operativo, aquella que se encarga de hacer las llamadas de sistema (<em>system calls</em> como <code>write</code>, <code>open</code>, <code>fork</code>, <code>exec</code>, etcétera). Mediante el shell podemos, por ejemplo, crear archivos, directorios, copiar archivos, mover archivos, crear particiones de discos, conectarse remotamente a otro sistema, entre otras funciones. El shell puede ejecutar comandos tales como <code>cd</code>, o puede ejecutar programas, tales como <code>ls</code>.</p>
+<figure>
+<img src="img/unix_kern_shell_util.png" height="200" alt="Composición del sistema operativo UNIX V de AT&amp;T" /><figcaption aria-hidden="true">Composición del sistema operativo UNIX V de AT&amp;T</figcaption>
+</figure>
+<p>Ahora bien, y ¿qué es todo eso de línea de comandos, <em>windows manager</em>, <em>desktop environment</em>? Como vimos, la definición de shell no nos indica <em>cómo</em> el usuario debe comunicarse con el sistema, quiero decir, no nos indica si se debe hacer mediante un medio gráfico, basado en texto, basado en señales, etcétera. En círculos UNIX, se le dice shell al software que se conoce como <em>command-line shell</em> o como una shell del tipo CLI (del inglés command-line interface), y lo que nosotros hispanohablantes conocemos como <em>línea de comandos</em>. Entonces, en pocas palabras, la linea de comandos es un shell basado en texto.</p>
+<figure>
+<img src="img/bash_demo.png" height="200" alt="Shell CLI: bash" /><figcaption aria-hidden="true">Shell CLI: <code>bash</code></figcaption>
+</figure>
+<p>Pero también existen shells que son del tipo GUI (del inglés graphical user interface), esto es, shells gráficas, que corren encima de sistemas de ventanas (<em>windowing systems</em>), como <code>X</code> o <code>wayland</code>. Entonces, los <code>X</code> <em>windows managers</em> o los <code>wayland</code> <em>compositors</em>, pueden ser vistos como shells, dado que permiten organizar archivos y ejecutar comandos y programas. Algunos windows managers vienen con un propio interprete capaz de ejecutar comandos en caliente, como <code>awesomewm</code> y su interprete embebido de <code>lua</code>.</p>
+<figure>
+<img src="img/dragdrop.png" height="200" alt="Drag and drop en KDE plasma. El windows manager permite que KDesktop y Konqueror se comuniquen y se muevan archivos" /><figcaption aria-hidden="true">Drag and drop en KDE plasma. El windows manager permite que <code>KDesktop</code> y <code>Konqueror</code> se comuniquen y se muevan archivos</figcaption>
+</figure>
+<h2 id="qué-es-una-tty-y-una-pty">¿Qué es una TTY y una PTY?</h2>
+<p>Una tty es un dispositivo terminal, ya sea real como el VT100, o emulado, como los que nos proporciona el kernel de Linux cuando pulsamos una combinación de teclas. Para el kernel, una tty es un driver que permite conectar la terminal real o virtual con el kernel. El sistema tendrá definida una tty por cada punto de acceso al mismo, los cuales al abrirse tienen un comportamiento determinado por el administrador del sistema.</p>
+<p>Una pty es una pseudo terminal, esto es, un dispositivo terminal emulado por otro programa. Este concepto se utiliza como una capa intermedia entre el dispositivo emulado y una tty, de tal manera que el kernel maneje a ambos como si se tratara de una terminal común. En un principio, el concepto de pty se creó para mapear entradas y salidas de conexiones a un sistema de tiempo compartido vía red (como Internet) en entradas y salidas del estilo de una terminal común. Hoy día, también se utliza este concepto para correr emuladores de terminal, tales como <code>konsole</code>, <code>gnome-terminal</code> o <code>xterm</code>. Las pseudo terminales están compuestas por dos partes: una parte maestra que emula la terminal (ptmx) y una parte esclava que se comporta como una terminal común (pts).</p>
+<p>Dado que en UNIX todo es tratado como archivos, los programas y el kernel mismo se comunican con las distintas terminales mediante los archivos alojados en <code>/dev/tty</code> o <code>/dev/pts</code>.</p>
+<h2 id="relacionando-conceptos">Relacionando conceptos</h2>
+<p>Relacionemos un poco todo esto que dijimos. Veamos muy por encima un sistema Linux moderno.</p>
+<p>El kernel nos provee una terminal virtual, la cual se comunica con el usuario mediante el teclado y una pantalla, y se comunica con el kernel mediante un tty driver. Así mismo se genera una conexión entre tty y shell, el cual será el encargado de ejecutar los comandos que el usuario escriba.</p>
+<figure>
+<img src="img/tty_kernel_shell_term.png" height="150" alt="Diagrama con relación de conceptos" /><figcaption aria-hidden="true">Diagrama con relación de conceptos</figcaption>
+</figure>
+<h2 id="qué-es-un-terminal-emulator">¿Qué es un terminal emulator?</h2>
+<p>Los terminal emulator buscan emular a las <em>smart terminals</em> que surgieron en los últimos tiempos de los sistemas de tiempos compartidos, esto es, emulan funcionalidades como procesar la entrada del usuario (backspace borra sin tener que preguntar al sistema que se debe hacer), se refrescan instantáneamente, y permiten realizar ediciones en línea.</p>
+<p>Para crear estos programas se utilizó el concepto de pseudo terminales. Lo primero que hacen estos programas es crean una pseudo terminal. Esta pseudo terminal está compuesta de dos archivos ya vistos: el pty master, aquella parte que el terminal emulator abre, y el pty slave, aquella parte que los programas que corren en una determinada terminal abren para hacer operaciones de I/O.</p>
+<p>Una vez que se abre la pseudo terminal, el programa comienza un subproceso, que suele ser una shell como <code>bash</code>. El terminal emulator realiza estas acciones casi igual que un inicio de sesión en una terminal real o en una terminal virtual.</p>
+<ol type="1">
+<li><code>fork</code>.</li>
+<li>Abre el pts con los file descriptors 0, 1 y 2.</li>
+<li><code>exec</code> el shell en el proceso hijo.</li>
+</ol>
+<p>Cuando el proceso hijo escribe en el pts, el terminal emulator ve la entrada en el ptmx. De la misma manera, cuando el emulador escribe en el ptmx, se ve como una entrada en el pts.</p>
+<h2 id="conclusión">Conclusión</h2>
+<p>Un sistema operativo construido en los 70’s hoy día es tan (o quizás más) importante como otros sistemas operativos más modernos. Sus mecanismos internos fueron tan bien pensados que hoy día siguen funcionando con pequeñas modificaciones. Esto es, sin dudas, el beneficio de un diseño a conciencia, con una filosofía de fondo y una manera de hacer las cosas de probado éxito.</p>
+<p>Y te preguntarás, ¿como funcionan los multiplexers de terminales como <code>screen</code> de GNU o <code>tmux</code>? Y yo te contesto: es una capa más encima de los emuladores de terminal, ya que al final del día son tan solo un nuevo programa; será un tema de futura discusión.</p>
+</article>
+<footer>
+	<p>Created with a custom frontend to pandoc developed by me</p>
+</footer>
+</body>
+</html>
