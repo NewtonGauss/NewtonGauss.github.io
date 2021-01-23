@@ -346,7 +346,8 @@ nav > div > ul > li > a:hover {
     float: right;
 }
 .logo {
-    margin-right: 0.5em
+    margin-right: 0.5em;
+    max-width:15%;
 }
 p.date {
     font-size: 13px;
