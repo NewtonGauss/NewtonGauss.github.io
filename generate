@@ -15,7 +15,7 @@ function generate_article_list() {
 	for i in $(ls -t -1 $art_dir/*.html); do
 		art_name="$(grep "<h1.*>.*</h1>" $i | head -1 | sed "s/<.*>\(.*\)<.*>/\\1/")"
 		sed "/<h1 id=\"$id_art_header\">/a\
-			<li><a class="art-ls" href=\"$i\">$art_name</a></li>" -i $html_index
+			<li><a class=\"art-ls\" href=\"$i\">$art_name</a></li>" -i $html_index
 	done
 	sed -e "/<h1 id=\"$id_art_header\">/a\
 		<ul>" \
