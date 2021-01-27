@@ -40,7 +40,7 @@
 22 ene 2021
 </p>
 <h2 id="qué-es-una-terminal">¿Qué es una terminal?</h2>
-<p>Hace mucho, mucho tiempo, se utilizaban aparatos llamados teletipos, o <em>teletypes</em> en inglés (de aquí surge la sigla <em>tty</em>). Estos teletipos es lo que se conoce como terminal. Las terminales son un equipo electrónico con el cual se interactúa (o se interactuaba, hoy raramente se hace de la misma manera) con un sistema en tiempo compartido (como era usado UNIX en la época de los setenta y los ochenta). Estas terminales poseían un display (las más cancheras, la mayoría se trataba de una impresora, y cada salida del sistema se imprimía, esto es, se hacía un <code>print</code>) y un teclado para interactuar con el sistema, esto es, con la máquina “madre”. Estas terminales eran conectadas mediante un cable serial, y esta es una de las razones por lo cual en UNIX los comandos suelen ser cortos (<code>cd</code>, <code>sh</code>, <code>rm</code>, etcétera).</p>
+<p>Hace mucho, mucho tiempo, se utilizaban aparatos llamados teletipos, o <em>teletypes</em> en inglés (de aquí surge la sigla <em>tty</em>). Estos teletipos es lo que se conoce como terminal. Las terminales son un equipo electrónico con el cual se interactúa (o se interactuaba, hoy raramente se hace de la misma manera) con un sistema en tiempo compartido, como era usado UNIX en la época de los setenta y los ochenta. Estas terminales poseían un display (las más cancheras, la mayoría se trataba de una impresora, y cada salida del sistema se imprimía, esto es, se hacía un <code>print</code>) y un teclado para interactuar con el sistema, esto es, con la máquina “madre”. Estas terminales eran conectadas mediante un cable serial, y esta es una de las razones por lo cual en UNIX los comandos suelen ser cortos: <code>cd</code>, <code>sh</code>, <code>rm</code>, etcétera.</p>
 <figure>
 <img src="img/teltypes.jpg" height="200" alt="Teletipos de la época de los 1940’s" /><figcaption aria-hidden="true">Teletipos de la época de los 1940’s</figcaption>
 </figure>
@@ -48,7 +48,7 @@
 <figure>
 <img src="img/vt100.jpg" height="200" alt="Terminal VT100" /><figcaption aria-hidden="true">Terminal VT100</figcaption>
 </figure>
-<p>No es casualidad que siga estando el concepto de terminal entre nosotros. UNIX, al tratar todo como archivos, pudo mantener su modelo viejo (apto para sistemas compartidos) y lograr adaptarlo a computadoras personales. Para lograr esto, el kernel de los sistemas UNIX proveen terminales virtuales, a las cuales se accede, generalmente, mediante una combinación de teclas (<code>CTRL+ALT+F1</code> para ir a la terminal virtual 1). Sin embargo, no importa que sean virtuales, los sistemas UNIX las tratan de la misma manera que a las terminales “reales”. Esto quiere decir, que si hoy día quisiéramos conectar una terminal como la VT100 en un sistema moderno, podríamos (como se puede ver con los HP thin clients, “computadoras” que son más bien terminales y aprovechan la computación basada en la nube). Si te encontrás entre las/os lectoras/es curiosos/as, ya te estarás preguntando si los emuladores de terminal están incluidos dentro del grupo de terminales virtuales, y te voy a dar una respuesta rápida, pero tenés que saber que después vamos a tocar ese tema: es complicado, definitivamente no son lo que se llama tty (que se verá también después), y siempre corren debajo de una terminal virtual; entonces, redondeando, semánticamente sí son terminales virtuales, pero para un sistema UNIX, no.</p>
+<p>No es casualidad que siga estando el concepto de terminal entre nosotros. UNIX, al tratar todo como archivos, pudo mantener su modelo viejo (apto para sistemas compartidos) y lograr adaptarlo a computadoras personales. Para lograr esto, el kernel de los sistemas UNIX proveen terminales virtuales, a las cuales se accede, generalmente, mediante una combinación de teclas (<code>CTRL+ALT+F1</code> para ir a la terminal virtual 1). Sin embargo, no importa que sean virtuales, los sistemas UNIX las tratan de la misma manera que a las terminales “reales”. Esto quiere decir, que si hoy día quisiéramos conectar una terminal como la VT100 en un sistema moderno, podríamos (como se puede ver con los HP thin clients, “computadoras” que son más bien terminales y aprovechan la computación basada en la nube). Si te encontrás entre las/os lectoras/es curiosas/os, ya te estarás preguntando si los emuladores de terminal están incluidos dentro del grupo de terminales virtuales, y te voy a dar una respuesta rápida, pero tenés que saber que después vamos a tocar ese tema: es complicado, definitivamente no son lo que se llama tty (que se verá también después), y siempre corren debajo de una terminal virtual; entonces, redondeando, semánticamente sí son terminales virtuales, pero para un sistema UNIX, no.</p>
 <figure>
 <img src="img/hp-thin-client.jpg" height="200" alt="HP Thin Client, una especie de modem al cual se le conecta un monitor y los periféricos" /><figcaption aria-hidden="true">HP Thin Client, una especie de modem al cual se le conecta un monitor y los periféricos</figcaption>
 </figure>
@@ -77,7 +77,7 @@
 </figure>
 <h2 id="qué-es-un-terminal-emulator">¿Qué es un terminal emulator?</h2>
 <p>Los terminal emulator buscan emular a las <em>smart terminals</em> que surgieron en los últimos tiempos de los sistemas de tiempos compartidos, esto es, emulan funcionalidades como procesar la entrada del usuario (backspace borra sin tener que preguntar al sistema que se debe hacer), se refrescan instantáneamente, y permiten realizar ediciones en línea.</p>
-<p>Para crear estos programas se utilizó el concepto de pseudo terminales. Lo primero que hacen estos programas es crean una pseudo terminal. Esta pseudo terminal está compuesta de dos archivos ya vistos: el pty master, aquella parte que el terminal emulator abre, y el pty slave, aquella parte que los programas que corren en una determinada terminal abren para hacer operaciones de I/O.</p>
+<p>Para crear estos programas se utilizó el concepto de pseudo terminales. Lo primero que hacen estos programas es crear una pseudo terminal, compuesta por dos archivos ya vistos: el pty master, aquella parte que el terminal emulator abre, y el pty slave, aquella parte que los programas que corren en una determinada terminal abren para hacer operaciones de I/O.</p>
 <p>Una vez que se abre la pseudo terminal, el programa comienza un subproceso, que suele ser una shell como <code>bash</code>. El terminal emulator realiza estas acciones casi igual que un inicio de sesión en una terminal real o en una terminal virtual.</p>
 <ol type="1">
 <li><code>fork</code>.</li>
@@ -86,11 +86,17 @@
 </ol>
 <p>Cuando el proceso hijo escribe en el pts, el terminal emulator ve la entrada en el ptmx. De la misma manera, cuando el emulador escribe en el ptmx, se ve como una entrada en el pts.</p>
 <h2 id="conclusión">Conclusión</h2>
-<p>Un sistema operativo construido en los 70’s hoy día es tan (o quizás más) importante como otros sistemas operativos más modernos. Sus mecanismos internos fueron tan bien pensados que hoy día siguen funcionando con pequeñas modificaciones. Esto es, sin dudas, el beneficio de un diseño a conciencia, con una filosofía de fondo y una manera de hacer las cosas de probado éxito.</p>
+<p>Un sistema operativo construido en los 70’s hoy día es tan (o quizás más) importante como otros sistemas operativos más modernos. Sus mecanismos internos fueron tan bien pensados que aún siguen funcionando con pequeñas modificaciones. Esto es, sin dudas, el beneficio de un diseño a conciencia, con una filosofía de y una manera de hacer las cosas de probado éxito.</p>
 <p>Y te preguntarás, ¿como funcionan los multiplexers de terminales como <code>screen</code> de GNU o <code>tmux</code>? Y yo te contesto: es una capa más encima de los emuladores de terminal, ya que al final del día son tan solo un nuevo programa; será un tema de futura discusión.</p>
 </article>
 <footer>
-	<p>Created with a custom frontend to pandoc developed by me</p>
+	<p>
+	Created with a 
+	<a href="https://github.com/NewtonGauss/NewtonGauss.github.io">
+		custom frontend to pandoc
+	</a>
+	developed by me
+	</p>
 </footer>
 </body>
 </html>

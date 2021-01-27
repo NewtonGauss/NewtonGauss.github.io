@@ -8,13 +8,13 @@ Hace mucho, mucho tiempo, se utilizaban aparatos llamados teletipos, o
 *teletypes* en inglés (de aquí surge la sigla *tty*). Estos teletipos es lo que
 se conoce como terminal. Las terminales son un equipo electrónico con el cual se
 interactúa (o se interactuaba, hoy raramente se hace de la misma manera) con un
-sistema en tiempo compartido (como era usado UNIX en la época de los setenta y
-los ochenta). Estas terminales poseían un display (las más cancheras, la mayoría
+sistema en tiempo compartido, como era usado UNIX en la época de los setenta y
+los ochenta. Estas terminales poseían un display (las más cancheras, la mayoría
 se trataba de una impresora, y cada salida del sistema se imprimía, esto es, se
 hacía un `print`) y un teclado para interactuar con el sistema, esto es, con la
 máquina "madre". Estas terminales eran conectadas mediante un cable serial, y
-esta es una de las razones por lo cual en UNIX los comandos suelen ser cortos
-(`cd`, `sh`, `rm`, etcétera).
+esta es una de las razones por lo cual en UNIX los comandos suelen ser cortos:
+`cd`, `sh`, `rm`, etcétera.
 
 ![Teletipos de la época de los 1940's](img/teltypes.jpg){height=200px}
 
@@ -39,7 +39,7 @@ sistemas UNIX las tratan de la misma manera que a las terminales "reales". Esto
 quiere decir, que si hoy día quisiéramos conectar una terminal como la VT100 en
 un sistema moderno, podríamos (como se puede ver con los HP thin clients,
 "computadoras" que son más bien terminales y aprovechan la computación basada en
-la nube). Si te encontrás entre las/os lectoras/es curiosos/as, ya te estarás
+la nube). Si te encontrás entre las/os lectoras/es curiosas/os, ya te estarás
 preguntando si los emuladores de terminal están incluidos dentro del grupo de
 terminales virtuales, y te voy a dar una respuesta rápida, pero tenés que saber
 que después vamos a tocar ese tema: es complicado, definitivamente no son lo que
@@ -130,10 +130,10 @@ que preguntar al sistema que se debe hacer), se refrescan instantáneamente, y
 permiten realizar ediciones en línea.
 
 Para crear estos programas se utilizó el concepto de pseudo terminales. Lo
-primero que hacen estos programas es crean una pseudo terminal. Esta pseudo
-terminal está compuesta de dos archivos ya vistos: el pty master, aquella parte
-que el terminal emulator abre, y el pty slave, aquella parte que los programas
-que corren en una determinada terminal abren para hacer operaciones de I/O.
+primero que hacen estos programas es crear una pseudo terminal, compuesta por
+dos archivos ya vistos: el pty master, aquella parte que el terminal emulator
+abre, y el pty slave, aquella parte que los programas que corren en una
+determinada terminal abren para hacer operaciones de I/O.
 
 Una vez que se abre la pseudo terminal, el programa comienza un subproceso, que
 suele ser una shell como `bash`. El terminal emulator realiza estas acciones
@@ -152,9 +152,9 @@ una entrada en el pts.
 
 Un sistema operativo construido en los 70's hoy día es tan (o quizás más)
 importante como otros sistemas operativos más modernos. Sus mecanismos internos
-fueron tan bien pensados que hoy día siguen funcionando con pequeñas
-modificaciones. Esto es, sin dudas, el beneficio de un diseño a conciencia, con
-una filosofía de fondo y una manera de hacer las cosas de probado éxito.
+fueron tan bien pensados que aún siguen funcionando con pequeñas modificaciones.
+Esto es, sin dudas, el beneficio de un diseño a conciencia, con una filosofía de
+y una manera de hacer las cosas de probado éxito.
 
 Y te preguntarás, ¿como funcionan los multiplexers de terminales como `screen`
 de GNU o `tmux`? Y yo te contesto: es una capa más encima de los emuladores de

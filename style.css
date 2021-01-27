@@ -19,6 +19,7 @@ body {
 a {
   color: #fc636e;
   text-decoration: none;
+  text-decoration: underline;
 }
 
 a:visited {
